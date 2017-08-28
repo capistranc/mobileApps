@@ -23,8 +23,58 @@ func sumAny(_ params:Any...) -> Int{ //each case breaks after each case automati
     print(sum)
     return sum
 }
-sumAny(5,99,-30,2.0,3.0,Float(9.9),"test","who dat")
+sumAny(5,2,3,2.0,Float(9.9),"test","who dat")
 
 var isInt: (Int) -> (Int) = { x in
     return x
 }
+
+func sumAny2(_ params:Any...) -> Int{
+    return 0
+}
+
+
+var intToString: (Int) -> (String) = { x in
+    let str = String(x)
+    return "Hello \(str)"
+}
+
+
+print(intToString(5))
+
+
+func sumAny3(_ params:Any...) -> Int{
+    return params.map{
+        switch $0{
+        case let val as Int:
+            return val
+        case is String:
+            return 5
+        default:
+            return -10
+        }
+        }.reduce(0){$0 + $1}
+}
+
+
+
+func sumAnyHard(_ params:Any...) -> Int{ //each case breaks after each case automatically
+    var sum = 0
+    for param in params{
+        switch param {
+        case let val as Int:
+            sum += val
+        case let str as String:
+            if let val = Int(str){
+                return -val
+            }
+            
+        default:
+            sum -= 10
+        }
+    }
+    
+    print(sum)
+    return sum
+}
+sumAnyHard(5,2,3,2.0,Float(9.9),"test","who dat")

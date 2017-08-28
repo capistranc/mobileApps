@@ -74,6 +74,6 @@ optionalClass?.number = 10
 //optionalClass = nil
 print(optionalClass?.number?.hashValue)
 
-array1 = ["a", "b", "c", "d"]
+let myArray1 = ["a", "b", "c", "d"]
 
-let filtered = myArray1.filter($0.characters.first == "o")
+let filtered = myArray1.filter{$0.characters.first == "o"}
