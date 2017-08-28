@@ -104,9 +104,9 @@ let myStringWithCommas = arrayOfWords.joined(separator: ",")
 //print(myStringWithCommas)
 
 
-String has a number, then return that number in negative
-String has no number, return 5
-ignored repeated numbers, Just on the ints
+//String has a number, then return that number in negative
+//String has no number, return 5
+//ignored repeated numbers, Just on the ints
 
 
 func sumAny2(_ params:Any...) -> Int{
