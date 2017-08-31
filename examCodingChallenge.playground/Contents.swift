@@ -34,6 +34,32 @@ func countFrom(from:Int, to: Int) {
 }
 countFrom(from: 5, to: 10)
 
+
+//Teacher's solution
+func longestWord(_ object:Any) -> String? {
+//    guard object is [String] || object is String else {return nil}
+    if let s = object as? String {
+        let array = s.components(separatedBy: " ")
+        let filtered = array.filter{$0.characters.count % 2 == 0}
+        let final = filtered.sorted{$0.characters.count > $1.characters.count}
+        guard final.count > 0 else {return nil}
+        return final[0]
+    } else if let a = object as? [String] {
+        let filtered = a.filter{$0.characters.count % 2 == 0}
+        let final = filtered.sorted{$0.characters.count > $1.characters.count}
+        guard final.count > 0 else {return nil}
+        return final[0]
+    }
+    return nil
+}
+
+func countFrom2(from:inout Int, to: Int) {
+    print(from)
+    if from == to {return}
+    from += 1
+    countFrom2(from: &from, to: to)
+}
+
 /*
  1. An optional is a wrapper that contains a value that either have a value, or are equal to nil
  It's helpful for when we have values that may or may not exist when the program runs. This way our program doesn't crash when
@@ -59,5 +85,5 @@ countFrom(from: 5, to: 10)
  
  10. Objects on a computer are always stored in memory. The value type refers to the information stored in that place in memory, while a references type is the address of the object location in memory.
  
- 11. Swift is a hard-retype language. With the use of the Any type, a varaible can easily be change from a Integer to a String without recasting.
+ 11. Swift is a strong retype language. With the use of the Any type, a varaible can easily be change from a Integer to a String without recasting.
  */
