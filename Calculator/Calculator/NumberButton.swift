@@ -11,8 +11,8 @@ import UIKit
 
 
 class NumberButton:UIButton{
-    @IBInspectable var num = 0
-    func setNumber(value:Int) {
+    @IBInspectable var num:Double = 0.0
+    func setNumber(value:Double) {
         self.num = value
-    }
+    } 
 }

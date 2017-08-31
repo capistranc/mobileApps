@@ -22,17 +22,19 @@ class ViewController: UIViewController {
     @IBOutlet weak var eightBtn:NumberButton!
     @IBOutlet weak var nineBtn:NumberButton!
     @IBOutlet weak var zeroBtn:NumberButton!
+    
     @IBOutlet weak var plusBtn:OperationButton!
     @IBOutlet weak var minusBtn:OperationButton!
     @IBOutlet weak var multiplyBtn:OperationButton!
     @IBOutlet weak var divideBtn:OperationButton!
     @IBOutlet weak var equalsBtn:OperationButton!
-    @IBOutlet weak var undoBtn:OperationButton!
     @IBOutlet weak var clearBtn:OperationButton!
     @IBOutlet weak var negateBtn:OperationButton!
+    @IBOutlet weak var decimalBtn:OperationButton!
+//    @IBOutlet weak var undoBtn:OperationButton!
     
-    var lhs:Int?
-    var rhs:Int?
+    var lhs:Double?
+    var rhs:Double?
     var currentOp:Operation?
     
     override func viewDidLoad() {
@@ -47,15 +49,15 @@ class ViewController: UIViewController {
         eightBtn.setNumber(value: 8)
         nineBtn.setNumber(value: 9)
         zeroBtn.setNumber(value: 0)
+        
+        
         plusBtn.setOperation(to: .plus)
         minusBtn.setOperation(to: .minus)
         multiplyBtn.setOperation(to: .multiply)
         divideBtn.setOperation(to: .divide)
         equalsBtn.setOperation(to: .equals)
-        undoBtn.setOperation(to: .undo)
         clearBtn.setOperation(to: .clear)
         negateBtn.setOperation(to: .negate)
-        
         // Do any additional setup after loading the view, typically from a nib.
     }
     
@@ -72,15 +74,25 @@ class ViewController: UIViewController {
         self.present(alert, animated: true)
     }
     
+    func overflowError(){
+        let alert = UIAlertController(title: "Error", message: "Why can't I hold all these ints??", preferredStyle: .alert)
+        let ok = UIAlertAction(title: "slow down buddy", style: .cancel)
+        alert.addAction(ok)
+        self.present(alert, animated: true)
+    }
     
     @IBAction func NumberPress(_ sender:Any) {
         guard let btn = sender as? NumberButton else {return}
         if currentOp == nil {
-            let val = lhs ?? 0
-            lhs = val*10 + btn.num
+            let val = lhs ?? 0.0
+            let strCheck = String(val)
+            if strCheck.characters.count > 15 {return}
+            lhs = val * 10 + btn.num
         } else {
-            let val = rhs ?? 0
-            rhs = val*10 + btn.num
+            let val = rhs ?? 0.0
+            let strCheck = String(val)
+            if strCheck.characters.count > 15 {return}
+            rhs = val * 10 + btn.num
         }
         
         updateLabels()
@@ -117,11 +129,12 @@ class ViewController: UIViewController {
         
     }
     
-    func evaluateExpression()-> Int?{
-        var answer = 0
+    func evaluateExpression() -> Double? {
+        var answer = 0.0
         guard let leftVal = lhs else {return nil}
         guard let rightVal = rhs else {return nil}
         guard let op = currentOp else {return nil}
+        
         switch op {
         case .plus:
             answer = leftVal + rightVal
@@ -132,6 +145,7 @@ class ViewController: UIViewController {
         case .divide:
             if rightVal == 0 {
                 rhs = nil
+                
                 presentAlert()
                 return nil
             }
@@ -155,14 +169,15 @@ class ViewController: UIViewController {
     @IBAction func OperationPress(_ sender:Any) {
         guard let btn = sender as? OperationButton else {return}
         switch btn.operation {
-        case .undo:
-            if currentOp == nil{
-                guard let leftVal = lhs else {return}
-                lhs = leftVal / 10
-            } else {
-                guard let rightVal = rhs else {return}
-                rhs = rightVal / 10
-            }
+//        case .undo:
+//            if currentOp == nil{
+//                guard let leftVal = lhs else {return}
+//                lhs = leftVal / 10
+//            } else {
+//                guard let rightVal = rhs else {return}
+//                rhs = rightVal / 10
+//            }
+            
         case .clear:
             clearValues()
         case .equals:
@@ -184,4 +199,3 @@ class ViewController: UIViewController {
             updateLabels()
     }
 }
-

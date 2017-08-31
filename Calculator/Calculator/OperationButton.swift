@@ -16,6 +16,7 @@ enum Operation:String{
     case multiply = "*"
     case equals = "="
     case negate = "!"
+    case decimal = "."
     
     case undo = "<-"
     case clear = "C"
