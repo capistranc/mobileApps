@@ -330,8 +330,8 @@
                         <outlet property="divideBtn" destination="crr-5D-m5k" id="JsZ-Zq-b7f"/>
                         <outlet property="eightBtn" destination="EPV-Tl-Jsg" id="wQP-Yj-M7c"/>
                         <outlet property="equalsBtn" destination="bfZ-TA-1ZW" id="WpR-H1-Wyu"/>
-                        <outlet property="fiveBtn" destination="SpA-kl-3rw" id="mS7-5g-IVg"/>
-                        <outlet property="fourBtn" destination="csp-d4-2xR" id="cpz-zJ-VPe"/>
+                        <outlet property="fiveBtn" destination="cdh-0F-Bh2" id="z6V-CL-dX0"/>
+                        <outlet property="fourBtn" destination="SpA-kl-3rw" id="wJX-eY-c5i"/>
                         <outlet property="minusBtn" destination="oAR-Ab-uAL" id="FEL-nC-VDd"/>
                         <outlet property="multiplyBtn" destination="uBm-Dy-Sh5" id="zGc-51-Lo7"/>
                         <outlet property="negateBtn" destination="pkH-Vw-oFH" id="hwK-m7-X6G"/>
