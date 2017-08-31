@@ -29,6 +29,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var equalsBtn:OperationButton!
     @IBOutlet weak var undoBtn:OperationButton!
     @IBOutlet weak var clearBtn:OperationButton!
+    @IBOutlet weak var negateBtn:OperationButton!
     
     var lhs:Int?
     var rhs:Int?
@@ -53,6 +54,7 @@ class ViewController: UIViewController {
         equalsBtn.setOperation(to: .equals)
         undoBtn.setOperation(to: .undo)
         clearBtn.setOperation(to: .clear)
+        negateBtn.setOperation(to: .negate)
         
         // Do any additional setup after loading the view, typically from a nib.
     }
@@ -165,15 +167,21 @@ class ViewController: UIViewController {
             clearValues()
         case .equals:
             evaluateEquals()
+        case .negate:
+            if currentOp == nil, let val = lhs{
+                lhs = -val
+            } else if let val = rhs{
+                rhs = -val
+            }
         default:
             if currentOp != nil {
                 lhs = evaluateExpression() ?? lhs
                 rhs = nil
             }
             currentOp = btn.operation
-            updateLabels()
             break
         }
+            updateLabels()
     }
 }
 
