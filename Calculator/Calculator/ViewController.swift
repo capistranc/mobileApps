@@ -156,7 +156,7 @@ class ViewController: UIViewController {
         guard let btn = sender as? OperationButton else {return}
         switch btn.operation {
         case .undo:
-            if currentOp != nil{
+            if currentOp == nil{
                 guard let leftVal = lhs else {return}
                 lhs = leftVal / 10
             } else {
