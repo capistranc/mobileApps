@@ -130,14 +130,12 @@ func almostIncreasingSequence(sequence: [Int]) -> Bool {
     }
     
     if (j == -1) {return true}
-    
     for i in 0..<len-1 {
         if sequence[i] > sequence[j] && i < j {
             guard deleteFlag == false else {return false}
             deleteFlag = true
         }
     }
-    
     return true
 }
 //
