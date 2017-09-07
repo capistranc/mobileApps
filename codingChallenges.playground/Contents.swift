@@ -37,7 +37,6 @@ func stringReverse(str:String) -> String{
 let str5 = str4 + "q" + "x" + stringReverse(str: str4)
 //print(str5)
 //print(checkPalindrome(inputString: str5))
-
 func adjacentElementsProduct(inputArray: [Int]) -> Int {
     var maxProduct = Int.min
     for (i, num) in inputArray[0..<inputArray.count-1].enumerated() {
@@ -70,10 +69,6 @@ func makeArrayConsecutive2(statues: [Int]) -> Int {
 
 
 //
-let seq1 = [1, 3, 2, 1]
-let seq2 = [10, 1, 2, 3, 4, 5]
-let seq3 = [40, 50, 60, 10, 20, 30]
-
 //func almostIncreasingSequence2(sequence: [Int]) -> Bool {
 //    var deletedNumIndex = -1
 //    for (i, num) in sequence[0..<(sequence.count-1)].enumerated() {
@@ -111,6 +106,11 @@ let seq3 = [40, 50, 60, 10, 20, 30]
 //    return true
 //}
 
+let seq1 = [1, 3, 2, 1]
+let seq2 = [10, 1, 2, 3, 4, 9, 5]
+let seq3 = [40, 50, 60, 10, 20, 30]
+
+
 func almostIncreasingSequence(sequence: [Int]) -> Bool {
     var j = -1
     var deleteFlag = false
@@ -118,24 +118,33 @@ func almostIncreasingSequence(sequence: [Int]) -> Bool {
     let set = Set(sequence)
     if (len - set.count > 1) {return false}
     
-    for i in 0..<len-1 {
-        if sequence[i] >= sequence[i+1] {
-            if (j == -1) {
-                j = i+1
-                continue
-            } else {
-                return false
-            }
+    for i in 1..<len-1 { // 3 cases
+        let val = (sequence[i-1], sequence[i], sequence[i+1])
+        switch val
+        {
+        case let (x,y,z) where ((y >= x && y >= z) || (y <= x && y <= z)): //middle number larger/smaller than both neighbors
+            break
+//            case let (x,y,z) where  //middle number smaller than left neighbor
+        default:
+            break
         }
     }
     
-    if (j == -1) {return true}
-    for i in 0..<len-1 {
-        if sequence[i] > sequence[j] && i < j {
-            guard deleteFlag == false else {return false}
-            deleteFlag = true
-        }
-    }
+//    if (j == -1) {return true}
+//    var skipped = false
+//    for i in 0..<len-1 {
+//        if sequence[i] >= sequence[i+1] {
+//            if i == j-1 {
+//                skipped = true
+//            } else if i == j && skipped {
+//                return false
+//            } else if i == j {
+//                skipped = true
+//            } else {
+//                return false
+//            }
+//        }
+//    }
     return true
 }
 //

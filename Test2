@@ -1,0 +1,60 @@
+//Chris Capistran
+//Exam 2
+//iOS Team
+1. The three functions are all functions of tableView and have the following three purposees
+a) func tableView(params) -> Int { } // this returns the number of rows to be shown in the tableView
+b) func tableView(params) -> UITableViewCell {} // This returns a cell containing the data you want to be presented
+c) func dataSource(params) -> UITableViewDelegateDataSource {} // this tells the UITable child delegate what the data to present for our UITable
+
+2. The applicaiton lifecycle has the 5 following states. Not Running, Inactive, Active, Background, Suspended.
+The following is a list of the different paths available from different views
+Not Running -> Inactive
+Inactive -> Active, Background
+Active -> Active
+Background -> Active, Suspended
+Suspended -> Not Running
+
+2b 
+didFinishLoadingWithOptions()
+willFinishLoadingWithOptions()
+applicationWillEnterForeground()
+applicationDidEnterForeground()
+applicationWillEnterBackground()
+applicationDidEnterBackground()
+applicationWillResign()
+
+3. 4 functions called on the view lifecycle
+viewDidLoad
+viewWillLoad
+willSuspendView
+didSuspendView
+
+4. viewDidLoad is part of the view lifecycle. It is used to initialize any functions or data that you would like to set when the view is loaded.
+Often times used to initalize UI formats.
+
+5. The function of didReceiveMemoryWarning is to prevent egregious memory leaks from occuring. 
+
+6. 5 collection objects availible in swift are:
+a) Arrays
+b) Sets
+c) Dictionarys
+d) CountableSets
+e) Hashables
+
+7. 4 different functional programming methods in swift are
+a) map
+b) reduce
+c) filter
+d) join
+
+8. The delegation design pattern adheres closely to the parent-child inheritance design pattern. The parent describe a protocol that the child
+must adhere to so the child must implement a function that is described in the parent. When the parent receives input, it delegates the action to the child telling it what to do with that data.
+
+9-10. Describe MVC and the advantages of the MVC architecture:
+The MVC architecture makes a clear separation of front end, back end, and the data. The View is the front end component, it presents the model to the user in the form of a user interface. The back-end component is the controller, which makes all of the modifications to the model. And the model is simply the data stored on the application that you would like to interact with. 
+
+When the user makes modifications to the data presented in the UI, these changes are sent to a controller. The controller is component that actually makes changes to the data model. A large benefit of this is flexibility of design. A UI doesn't hold any actual data, it only present data that is handed to it by the controller. Because of this the UI can be designed purely with the User Experience in mind, the controller will make sure that the data fits the view component. Another advantage is user experience. During the application lifecycle, when an application starts to become active, it must first become inactive. At this point the view component can be quikcly loaded without any data to populate it. This way the user doesn't have to wait for all the data to be loaded before they see something on the screen.
+
+11. Touch up inside
+
+12.A singleton is either a set/collection containing a single value, or a single value itself.
