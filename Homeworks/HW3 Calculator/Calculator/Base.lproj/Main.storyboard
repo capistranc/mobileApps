@@ -85,7 +85,7 @@
                                                         <rect key="frame" x="0.0" y="0.0" width="93" height="452.66666666666669"/>
                                                         <subviews>
                                                             <button opaque="NO" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="u9K-eJ-ioZ" customClass="NumberButton" customModule="Calculator" customModuleProvider="target">
-                                                                <rect key="frame" x="31.666666666666668" y="0.0" width="30.000000000000004" height="113"/>
+                                                                <rect key="frame" x="31.666666666666671" y="0.0" width="30.000000000000004" height="113"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="19"/>
                                                                 <state key="normal" title="7">
                                                                     <color key="titleColor" red="0.2111803756" green="0.2111803756" blue="0.2111803756" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -96,7 +96,7 @@
                                                                 </connections>
                                                             </button>
                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SpA-kl-3rw" customClass="NumberButton" customModule="Calculator" customModuleProvider="target">
-                                                                <rect key="frame" x="31.666666666666668" y="113" width="30.000000000000004" height="113.33333333333337"/>
+                                                                <rect key="frame" x="31.666666666666671" y="113" width="30.000000000000004" height="113.33333333333337"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="19"/>
                                                                 <state key="normal" title="4">
                                                                     <color key="titleColor" red="0.2111803756" green="0.2111803756" blue="0.2111803756" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -106,7 +106,7 @@
                                                                 </connections>
                                                             </button>
                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kKJ-6h-czh" customClass="NumberButton" customModule="Calculator" customModuleProvider="target">
-                                                                <rect key="frame" x="31.666666666666668" y="226.3333333333334" width="30.000000000000004" height="112.99999999999997"/>
+                                                                <rect key="frame" x="31.666666666666671" y="226.3333333333334" width="30.000000000000004" height="112.99999999999997"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="19"/>
                                                                 <state key="normal" title="1">
                                                                     <color key="titleColor" red="0.2111803756" green="0.2111803756" blue="0.2111803756" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -116,7 +116,7 @@
                                                                 </connections>
                                                             </button>
                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pkH-Vw-oFH" customClass="OperationButton" customModule="Calculator" customModuleProvider="target">
-                                                                <rect key="frame" x="31.666666666666668" y="339.33333333333331" width="30.000000000000004" height="113.33333333333337"/>
+                                                                <rect key="frame" x="31.666666666666671" y="339.33333333333331" width="30.000000000000004" height="113.33333333333337"/>
                                                                 <state key="normal" title="+/-"/>
                                                                 <connections>
                                                                     <action selector="OperationPress:" destination="BYZ-38-t0r" eventType="touchUpInside" id="kUT-0I-iKj"/>
