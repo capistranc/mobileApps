@@ -61,9 +61,7 @@
 				049D660C1F69BA7C001C0106 /* Controllers */,
 				049D660B1F69BA75001C0106 /* Views */,
 				049D660A1F69BA6F001C0106 /* Model */,
-				049D65F91F69BA5E001C0106 /* Main.storyboard */,
 				049D65FF1F69BA5E001C0106 /* Assets.xcassets */,
-				049D66011F69BA5E001C0106 /* LaunchScreen.storyboard */,
 				049D66041F69BA5E001C0106 /* Info.plist */,
 				049D65FC1F69BA5E001C0106 /* NetworkingWithClosures.xcdatamodeld */,
 			);
@@ -81,6 +79,8 @@
 		049D660B1F69BA75001C0106 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				049D65F91F69BA5E001C0106 /* Main.storyboard */,
+				049D66011F69BA5E001C0106 /* LaunchScreen.storyboard */,
 			);
 			name = Views;
 			sourceTree = "<group>";

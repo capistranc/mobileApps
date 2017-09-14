@@ -10,7 +10,7 @@ import Foundation
 
 class Networking {
     //escaping allows the function to complete without waiting for completeion, ie turns closure into a callback function
-    static func callApi(url:String, completion:@escaping ([SWCharacter]?, Error?) -> ()) {
+    static func callApi(url:String, completion:@escaping (SWCharacter?, Error?) -> ()) {
         guard let url = URL(string:url) else {return}
         
         let session = URLSession.shared
@@ -26,7 +26,7 @@ class Networking {
                 let json = try JSONSerialization.jsonObject(with: data)
                 guard let dictionary = json as? [String:Any] else {return}
                 guard let character = SWCharacter(dict: dictionary) else {return}
-                completion([character], error)
+                completion(character, error)
             } catch {
                 print("something went wrong")
             }

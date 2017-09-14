@@ -17,8 +17,8 @@ class ViewController: UIViewController {
         
         
         for i in  1..<86 {
-            Networking.callApi(url: "https://swapi.co/api/people/\(i)") { [unowned self] (characters, error) in
-                self.characters = characters!
+            Networking.callApi(url: "https://swapi.co/api/people/\(i)") { [unowned self] (character, error) in
+                self.characters.append(character!)
             }
         }
     }
