@@ -106,48 +106,181 @@ func makeArrayConsecutive2(statues: [Int]) -> Int {
 //    return true
 //}
 
-let seq1 = [1, 3, 2, 1]
-let seq2 = [10, 1, 2, 3, 4, 9, 5]
-let seq3 = [40, 50, 60, 10, 20, 30]
+//let seq1 = [1, 3, 2, 1]
+//let seq2 = [10, 1, 2, 3, 4, 9, 5]
+//let seq3 = [40, 50, 60, 10, 20, 30]
 
 
-func almostIncreasingSequence(sequence: [Int]) -> Bool {
-    var j = -1
-    var deleteFlag = false
-    let len = sequence.count
-    let set = Set(sequence)
-    if (len - set.count > 1) {return false}
-    
-    for i in 1..<len-1 { // 3 cases
-        let val = (sequence[i-1], sequence[i], sequence[i+1])
-        switch val
-        {
-        case let (x,y,z) where ((y >= x && y >= z) || (y <= x && y <= z)): //middle number larger/smaller than both neighbors
-            break
-//            case let (x,y,z) where  //middle number smaller than left neighbor
-        default:
-            break
-        }
-    }
-    
-//    if (j == -1) {return true}
-//    var skipped = false
-//    for i in 0..<len-1 {
-//        if sequence[i] >= sequence[i+1] {
-//            if i == j-1 {
-//                skipped = true
-//            } else if i == j && skipped {
+//func almostIncreasingSequence(sequence: [Int]) -> Bool {
+//    let len = sequence.count
+//    let set = Set(sequence)
+//    if (len - set.count > 1) {return false}
+//    var indexToRemove:Int?
+//    
+//    for i in 1..<len-1 { // 3 cases
+//        let val = (sequence[i-1], sequence[i], sequence[i+1]) // left < middle < right
+//        switch val
+//        {
+//        case let (x,y,z) where x >= y && x >= z: //left > middle, left > right
+//            indexToRemove = i-1
+//        case let (x,y,z) where x >= y &&  x <= z: //left > middle, left < right
+//            indexToRemove = i
+//        case let (x,y,z) where y >= z && i+1 == len-1: // middle > right
+//            if x > z {
+//                indexToRemove = i+1
+//            } else {
+//                indexToRemove = i
+//            }
+//            break
+//        default:
+//            break
+//        }
+//    }
+//    
+//    guard let index = indexToRemove else {return true}
+//    var newArray = sequence
+//    newArray.remove(at: index)
+//    if newArray.count == 2 && newArray[0] >= newArray[1]{
+//        return false
+//    }
+//    
+//    for i in 1..<newArray.count-1 { // 3 cases
+//        let val = (newArray[i-1], newArray[i], newArray[i+1]) // left < middle < right
+//        switch val
+//        {
+//        case let (x,y,z) where x >= y && x >= z: //left > middle, left > right
+//            return false
+//        case let (x,y,z) where x >= y &&  x <= z: //left > middle, left < right
+//            return false
+//        case let (x,y,z) where y >= z && i+1 == newArray.count-1: // middle > right
+//            if x > z {
 //                return false
-//            } else if i == j {
-//                skipped = true
 //            } else {
 //                return false
 //            }
+//            break
+//        default:
+//            break
 //        }
 //    }
-    return true
-}
+//    return true
+//}
+
 //
-print(almostIncreasingSequence(sequence: seq1))
-print(almostIncreasingSequence(sequence: seq2))
-print(almostIncreasingSequence(sequence: seq3))
+//print(almostIncreasingSequence(sequence: [3,2,1]))
+//print(almostIncreasingSequence(sequence: seq2))
+//print(almostIncreasingSequence(sequence: seq3))
+
+//let matrix = [[0, 1, 1, 2],
+//          [0, 5, 0, 0],
+//          [2, 0, 3, 3]]
+//
+//func matrixElementsSum(matrix: [[Int]]) -> Int {
+//    var zeroCols = Set<Int>()
+//    var newMatrix:[[Int]] = [[]]
+//    
+//    for row in matrix {
+//        var newRow:[Int] = []
+//        for (i, colEntry) in row.enumerated() {
+//            if zeroCols.contains(i) {
+//                newRow.append(0)
+//            } else {
+//                if colEntry == 0 {
+//                    zeroCols.insert(i)
+//                }
+//                newRow.append(colEntry)
+//            }
+//        }
+//        newMatrix.append(newRow)
+//    }
+//
+//    return newMatrix.reduce([]){$0 + $1}.reduce(0){$0 + $1}
+//}
+//
+//print(matrixElementsSum(matrix: matrix))
+
+//let s1 = "aabccz"
+//let s2 = "adcaax"
+//
+//func commonCharacterCount(s1: String, s2: String) -> Int {
+//    var set1 = NSCountedSet(array: s1.characters.filter{s2.characters.contains($0)}.flatMap{String($0)})
+//    var set2 = NSCountedSet(array: s2.characters.filter{s1.characters.contains($0)}.flatMap{String($0)})
+//    
+//    var count = 0
+//    set1.map{
+//        count += min(set1.count(for: $0),set2.count(for: $0))
+//    }
+//    return count
+//}
+//
+//print(commonCharacterCount(s1: s1, s2: s2))
+
+//let val1 = 303321
+//let val2 = 4223
+//let val3 = 325
+//
+//o(n) time, o(1) space
+//func isLucky(n: Int) -> Bool {
+//    let len = String(describing: n).characters.count
+//    var num = n, lhs = 0, rhs = 0
+//    for _ in 1...len {
+//        let val = num % 10
+//        if String(num).characters.count > len/2 {
+//            rhs += val
+//        } else {
+//            lhs += val
+//        }
+//        num = num / 10
+//        
+//    }
+//    return lhs==rhs
+//}
+//print(isLucky(n: val1))
+//print(isLucky(n: val2))
+//print(isLucky(n: val3))
+
+//let a = [-1, 150, 190, 170, -1, -1, 160, 180]
+//func sortByHeight(a: [Int]) -> [Int] {
+//    var treeIndicies:[Int] = []
+//    for (i,val) in a.enumerated() {
+//        if val == -1 {
+//            treeIndicies.append(i)
+//        }
+//    }
+//    
+//    var sortedArr = a.filter{$0 != -1}.sorted{$0<$1}
+//    treeIndicies.map{sortedArr.insert(-1, at: $0)}
+//    
+//    return sortedArr
+//}
+//
+//print(sortByHeight(a: a))
+
+let s1 = "a(bc)de"
+let s2 = "co(de(fight)s)"
+let s3 = "Code(Cha(lle)nge)"
+
+print(Array(s3.characters))
+func reverseParentheses(s: String) -> String {
+    var leftIndicies:[Int] = [], rightIndicies:[Int] = []
+    var chars:[Character] = Array(s.characters)
+    
+    for (i,char) in s.characters.enumerated() {
+        if char == "(" {
+            leftIndicies.append(i)
+        } else if char == ")" {
+            rightIndicies.append(i)
+        }
+    }
+    guard leftIndicies.count == rightIndicies.count else {return ""}
+    if leftIndicies.isEmpty {return s}
+    
+    reverse(leftIndex: &leftIndicies, rightIndex: &rightIndicies, chars: chars)
+    return s
+}
+
+func reverse(leftIndex:inout [Int], rightIndex:inout [Int], chars: [Character]) -> [Character] {
+     
+    return []
+}
+reverseParentheses(s: s1)
