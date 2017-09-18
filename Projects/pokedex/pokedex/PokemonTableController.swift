@@ -9,29 +9,63 @@
 import UIKit
 
 class PokemonTableController: UITableViewController {
-    var user = User()
     var pokemonList:[String] = []
-    var pokemonImages:[Int:UIImage] = [:]
+    var calledSet = Set<Int>()
+    let loadingSpinner = UIActivityIndicatorView()
     
     func assignBackground(background:UIImage) {
-        self.tableView.backgroundView = UIImageView(image: background)
+        DispatchQueue.main.async {
+            self.tableView.backgroundView = UIImageView(image: background)
+            self.tableView.backgroundView?.addSubview(self.loadingSpinner)
+        }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let api = Networking()
-        api.delegate = self
+        loadingSpinner.activityIndicatorViewStyle = .gray
+        loadingSpinner.hidesWhenStopped = true
+        loadingSpinner.startAnimating()
+        loadingSpinner.frame = self.view.bounds
+        loadingSpinner.transform = CGAffineTransform.init(scaleX: 2.0, y: 2.0)
+        loadingSpinner.center = self.view.center
+        loadingSpinner.color = .white
         
-        api.getPokemonPage(callType: .PokemonList, forId: nil)
-        api.getPokemonImage(type: .Background1, for: nil)
         
-        for i in 1...151 {
-            api.getPokemonImage(type: .PokeSprite, for: i)
+        Networking.getPokemonImage(callType: .Background1, forId: nil) { (image, err) in
+            guard err == nil else {return print(err!)}
+            guard let image = image else {return}
+            self.assignBackground(background: image)
         }
-        
-        // Do any additional setup after loading the view, typically from a nib.
     }
     
+    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let bottomEdge = scrollView.contentSize.height + scrollView.contentInset.bottom - scrollView.bounds.height
+        let atBottom:Bool = scrollView.contentOffset.y >= bottomEdge
+        let pokeLen = pokemonList.count
+        //        print("at bottom?", atBottom)
+        if atBottom && pokeLen < 151 && !calledSet.contains(pokeLen) {
+            calledSet.insert(pokeLen)
+            loadingSpinner.startAnimating()
+            Networking.getPokemonPage(callType: .PokemonList, forId: pokemonList.count){
+                [unowned self] (json, err) in
+                guard err == nil else {return print(err!)}
+                guard let json = json else {return}
+                guard let results = json["results"] as? [[String:Any]] else {return}
+                let pokeList = results.flatMap{ $0["name"] as? String}.map{$0.capitalized}
+                DispatchQueue.main.async {
+                    self.loadingSpinner.stopAnimating()
+                    if pokeLen == 140 {
+                        self.loadingSpinner.isHidden = true
+                        self.pokemonList.append(contentsOf: pokeList[0...10])
+                    } else {
+                        self.pokemonList.append(contentsOf: pokeList)
+                    }
+                    self.loadingSpinner.stopAnimating()
+                    self.tableView.reloadData()
+                }
+            }
+        }
+    }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -39,31 +73,23 @@ class PokemonTableController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.pokemonList.count
+        let len = self.pokemonList.count
+        //        return len == 151 ? len : len+1
+        return len
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return indexPath.row == pokemonList.count ? 100 : 75
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = self.tableView.dequeueReusableCell(withIdentifier: "Cell") else {
-            fatalError("No cell created, bad Identifier")}
-        let thisId = indexPath.row+1
-        var idText = String(thisId);
-        if idText.characters.count == 2 {idText = "0" + idText}
-        if idText.characters.count == 1 {idText = "00" + idText}
-        cell.textLabel?.text = idText + " " + self.pokemonList[indexPath.row]
-        cell.textLabel?.textColor = .white
-        
-        cell.detailTextLabel?.text = user.nicknames[thisId]
-        cell.detailTextLabel?.textColor = .white
-        cell.imageView?.image = pokemonImages[thisId]
+        self.navigationController?.navigationBar.barTintColor = .lightGray
+        guard let cell = self.tableView.dequeueReusableCell(withIdentifier: "Cell") as? PokeCell else { fatalError("No cell created, bad Identifier") }
+        let thisId = indexPath.row + 1
+        let name = self.pokemonList[indexPath.row]
+        cell.fillCell(id: thisId, name: name)
         return cell
     }
-    
-    func getPokeImage(id:Int) {
-        let api = Networking()
-        api.delegate = self
-        api.getPokemonImage(type: .PokeSprite, for: id)
-    }
-    
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard let identifier = segue.identifier else {return}
@@ -71,51 +97,10 @@ class PokemonTableController: UITableViewController {
         guard let nextView = segue.destination as? PokemonViewController else {return}
         guard let indexPath = self.tableView.indexPathForSelectedRow else {return}
         
+        let pokeId = indexPath.row+1
+        print("pokeid", pokeId)
+        
         nextView.selectedPokemonId = indexPath.row + 1
-        nextView.user = self.user
         self.tableView.deselectRow(at: indexPath, animated: true)
-    }
-}
-
-extension PokemonTableController:NetworkingDelegate {
-    func apiDidReturnWithJson(json:[String:Any], callType:ApiPage) {
-        if callType == .PokemonList {
-            guard let results = json["results"] as? [[String:Any]] else {return}
-            let pokeList = results.flatMap{ $0["name"] as? String}.map{$0.capitalized}
-            DispatchQueue.main.async { // should only be used for UI updates
-                if self.pokemonList != [] {
-                    self.pokemonList.append(contentsOf: pokeList)
-                } else {
-                    self.pokemonList = pokeList
-                }
-                self.tableView.reloadData()
-            }
-        }
-    }
-    
-    func apiDidReturnWithImage(type:PokeImageType, image: UIImage) {
-        switch type {
-        case .Background1:
-            DispatchQueue.main.async {
-                self.assignBackground(background: image)
-            }
-        case .PokeSprite:
-            DispatchQueue.main.async {
-                guard let idStr = image.accessibilityIdentifier else {return print("badId")}
-                guard let id = Int(idStr) else {return print("idNotAnInt")}
-                self.pokemonImages[id] = image
-                self.tableView.reloadData()
-            }
-            break
-        default:
-            break
-        }
-    }
-    
-    func apiDidFailWithError(error: NetworkError) {
-        print(error)
-    }
-    func apiResponseFailure(status: NetworkError){
-        print(status)
     }
 }

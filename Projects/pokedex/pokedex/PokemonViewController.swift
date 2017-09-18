@@ -15,78 +15,163 @@ class PokemonViewController:UIViewController {
     var user:User?
     var pokemon:Pokemon?
     var backgroundImageView : UIImageView!
-
-    @IBOutlet weak var mainViewContainer: UIStackView!
+    
     
     @IBOutlet weak var shinySwitch: UISwitch!
-    @IBOutlet weak var nicknameField: UITextField!
-    @IBOutlet weak var shinyButton: UIButton!
-    @IBOutlet weak var pokemonSpriteButton: UIButton!
+    
     @IBOutlet weak var pokemonSprite: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
-    @IBOutlet weak var flavorText: UILabel!
-    @IBOutlet weak var typeLabel: UILabel!
-    @IBOutlet weak var heightLabel: UILabel!
-    @IBOutlet weak var weightLabel: UILabel!
+
+    @IBOutlet weak var flavorText: UITextView!
+    @IBOutlet weak var type1: UIButton!
+    @IBOutlet weak var type2: UIButton!
     @IBOutlet weak var evo1: UIButton!
     @IBOutlet weak var evo2: UIButton!
     @IBOutlet weak var evo3: UIButton!
     
-    
-    override func viewDidLoad() {
+    override func viewDidLoad()
+    {
         super.viewDidLoad()
-        guard let pokeId = selectedPokemonId else {return}
-        self.pokemon = Pokemon(id: pokeId)
+        guard let pokeId = selectedPokemonId else {return print("noSelectedPokemonId")}
         evo1.tag = 0
         evo2.tag = 1
         evo3.tag = 2
         
-        initPageWithId(id: pokeId)
+        let thisPokemon = Pokemon(id: pokeId)
+        thisPokemon.fetchDataForView() {
+            DispatchQueue.main.async{
+                self.pokemon = thisPokemon
+                self.initView()
+            }
+        }
         
-        
-        flavorText.numberOfLines = 0
-        flavorText.sizeToFit()
-    }
-    
-    func initPageWithId(id:Int) {
-        guard let user = user else {return}
-        let api = Networking()
-        api.delegate = self
-        
-
-        api.getPokemonPage(callType: .Pokemon, forId: id)
-        api.getPokemonPage(callType: .SpeciesInfo, forId: id)
-        api.getPokemonImage(type: .Background2, for: nil)
-        if (user.favorites[id] == true) {
-            api.getPokemonImage(type: .ShinySprite, for: id)
-            shinySwitch.isOn = true
-        } else {
-            shinySwitch.isOn = false
-            api.getPokemonImage(type: .PokeSprite, for: id)
+        Networking.getPokemonImage(callType: .Background2, forId: nil) { [unowned self] (image, err) in
+            guard err == nil else {return print(err!)}
+            guard let image = image else {return}
+            DispatchQueue.main.async {
+                self.backgroundImageView.image = image
+            }
         }
     }
     
-    func updateView() {
-        guard let pokeId = selectedPokemonId else {return}
+    func initView() {
+        guard let pokeId = selectedPokemonId else {return print("noSelectedPokemonId")}
         var idText = String(pokeId);
         if idText.characters.count == 2 {idText = "0" + idText}
         if idText.characters.count == 1 {idText = "00" + idText}
-        nameLabel.text = idText + " \(pokemon?.name?.capitalized ?? "")"
-        typeLabel.text = "Type: \(pokemon?.types?.joined(separator: ", ").capitalized ?? "")"
-        heightLabel.text = "Height: \(pokemon?.height ?? 0)"
-        weightLabel.text = "Weight: \(pokemon?.weight ?? 0)"
-        flavorText.text = self.pokemon?.flavorText ?? ""
-        if let type = pokemon?.types {
-            selectBackground(type: type[0])
+        var basic = ""
+        
+        self.nameLabel.text = idText + " \(self.pokemon?.name?.capitalized ?? "")"
+        basic = basic +  "\nHeight: \(self.pokemon?.height ?? 0)"
+        basic = basic + "\nWeight: \(self.pokemon?.weight ?? 0)"
+        basic = basic + "\n \(self.pokemon?.flavorText ?? "")"
+        if let type = self.pokemon?.types {
+            self.navigationController?.navigationBar.barTintColor = self.getColorForType(type: type[0])
+        }
+        setPokeSprite()
+        setEvolutionButtons()
+    }
+    
+    func setPokeSprite() {
+        print("we here?")
+        let user = Cache.shared.user
+        guard let id = self.selectedPokemonId else {return print("bad id")}
+        if user.favorites[id] == true {
+            DispatchQueue.main.async{
+                print("shiny image")
+                self.pokemonSprite.image = self.pokemon?.shinyImage
+            }
+        } else {
+            DispatchQueue.main.async{
+                if let image = Cache.shared.imageHash[id] {
+                    self.pokemonSprite.image = image
+                }
+            }
         }
     }
     
-    func selectBackground(type: String) {
+    func setTypeButtons(types:[String]) {
+        guard let typeIds = self.pokemon?.typeUrlIds else {return print("failed type guard")}
+        self.type1.tag = typeIds[0]
+        if types.count == 1 {
+            self.type2.isEnabled = false
+            self.type2.isHidden = true
+        } else {
+            self.type2.tag = typeIds[1]
+        }
+    }
+    
+    func setAbilityButtons(types:[String]) {
+        guard let abilityIds = self.pokemon?.abilityUrlIds else {return print("failed type guard")}
+        self.type1.tag = abilityIds[0]
+        if types.count == 1 {
+            self.type2.isEnabled = false
+            self.type2.isHidden = true
+        } else {
+            self.type2.tag = abilityIds[1]
+        }
+    }
+    
+    
+    func getColorForType(type:String) -> UIColor {
         switch type {
+        case "fire":
+            return UIColor.orange
+        case "water":
+            return UIColor.blue
+        case "electric":
+            return UIColor.yellow
+        case "grass":
+            return UIColor.green
+        case "rock":
+            fallthrough
+        case "ground":
+            return UIColor.brown
+        case "psychic":
+            fallthrough
+        case "ghost":
+            return UIColor.purple
+        case "fighting":
+            return UIColor.red
+        case "dragon":
+            return UIColor.blue
+        case "fairy":
+            return UIColor.red
         default:
-//            assignBackground(name: "defaultBackground")
+             return UIColor.gray
+        }
+    }
+    
+    func setEvolutionButtons() {
+        guard let evo = self.pokemon?.evo else {return print("failed evo guard 1")}
+        let count = evo.count
+        let evoStrings:[String] = evo.flatMap{String($0)}
+        let evoImages:[UIImage] = evoStrings.flatMap{Cache.shared.imageCache.object(forKey: $0 as NSString)}
+        switch count {
+        case 3:
+            self.evo1.setImage(evoImages[0], for: .normal)
+            self.evo2.setImage(evoImages[1], for: .normal)
+            self.evo3.setImage(evoImages[2], for: .normal)
+        case 2:
+            self.evo3.isHidden = true
+            self.evo3.isEnabled = false
+            self.evo1.setImage(evoImages[0], for: .normal)
+            self.evo2.setImage(evoImages[1], for: .normal)
+        case 1:
+            self.evo3.isHidden = true
+            self.evo3.isEnabled = false
+            self.evo2.isHidden = true
+            self.evo2.isEnabled = false
+            self.evo1.isEnabled = false
+            self.evo1.setImage(evoImages[0], for: .normal)
+        default:
             break
         }
+    }
+    
+    func selectHeaderColor(type: String) {
+
+        
     }
     
     override func didReceiveMemoryWarning() {
@@ -94,129 +179,24 @@ class PokemonViewController:UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    func assignBackground(background:UIImage) {
-        backgroundImageView = UIImageView(frame: view.bounds)
-        backgroundImageView.contentMode =  UIViewContentMode.scaleAspectFill
-        backgroundImageView.clipsToBounds = true
-        backgroundImageView.image = background
-        backgroundImageView.center = view.center
-        view.addSubview(backgroundImageView)
-        self.view.sendSubview(toBack: backgroundImageView)
-    }
-    
     @IBAction func evoButtonTapped(_ sender:Any) {
         guard let button = sender as? UIButton else {return}
         guard let newSelectedPokemonId = self.pokemon?.evo?[button.tag] else {return}
-        self.selectedPokemonId = newSelectedPokemonId
-        pokemonSprite.image = button.imageView?.image
-        initPageWithId(id: newSelectedPokemonId)
+        DispatchQueue.main.async {
+            self.selectedPokemonId = newSelectedPokemonId
+            self.pokemonSprite.image = button.imageView?.image
+        }
     }
+    
     @IBAction func shinyTouched(_ sender: Any) {
         guard let id = selectedPokemonId else {return}
-        guard let currentUser = user else {return}
+        let currentUser = Cache.shared.user
         
         if let fav = currentUser.favorites[id] {
-            user?.favorites[id] = !fav
+            Cache.shared.user.favorites[id] = !fav
         } else {
-            user?.favorites[id] = true
+            Cache.shared.user.favorites[id] = true
         }
-        initPageWithId(id: id)
-    }
-}
-
-extension PokemonViewController:NetworkingDelegate {
-    func apiDidReturnWithJson(json:[String:Any], callType:ApiPage) {
-        //        var currentPokemon:Pokemon
-        let api = Networking()
-        api.delegate = self
-        DispatchQueue.main.async { // should only be used for UI updates
-            switch callType {
-            case .Pokemon:
-                self.pokemon?.initWithJson(json: json)
-                self.updateView()
-            //                api.getPokemonPage(callType: .SpeciesInfo, forId: currentPokemon.id)
-            case .SpeciesInfo:
-                self.pokemon?.setFlavorText(json: json)
-                api.getPokemonPage(callType: .EvolutionChain, forId: self.pokemon?.evolutionId)
-                self.updateView()
-            case .EvolutionChain:
-                self.pokemon?.setEvolutionLine(json: json)
-                guard let evoList = self.pokemon?.evo else {return print("broke at evoList")}
-                for evoId in evoList {
-                    api.getPokemonImage(type: .EvoSprite, for: evoId)
-                }
-                self.updateView()
-                if evoList.count < 3 {
-                    self.evo3.isHidden = true
-                    self.evo3.isEnabled = false
-                }
-                if evoList.count < 2 {
-                    self.evo2.isHidden = true
-                    self.evo2.isEnabled = false
-                }
-                if evoList.count == 1 {
-                    self.evo1.isEnabled = false
-                }
-            default:
-                break
-            }
-        }
-    }
-    
-    func apiDidReturnWithImage(type: PokeImageType, image: UIImage) {
-        DispatchQueue.main.async {
-            switch type {
-            case .Background2:
-                DispatchQueue.main.async {
-                    self.assignBackground(background: image)
-                }
-            case .ShinySprite:
-                fallthrough
-            case .PokeSprite:
-                self.pokemonSprite.image = image
-                break
-            case .EvoSprite:
-                guard let evo = self.pokemon?.evo else {return print("failed gaurd 1")}
-                if evo.count == 1 {self.evo1.setImage(image, for: .normal)}
-                
-                let evoStrings = evo.flatMap{String($0)}
-                if evoStrings.count == 2 {
-                    if image.accessibilityIdentifier ==  evoStrings[0] {
-                        self.evo1.setImage(image, for: .normal)
-                    } else {
-                        self.evo2.setImage(image, for: .normal)
-                        
-                    }
-                }
-
-                
-                if evoStrings.count == 3 {
-                    guard let imageStr = image.accessibilityIdentifier else {return print("failedAtImageAccessID")}
-                    
-                    switch imageStr {
-                    case evoStrings[0]:
-                        self.evo1.setImage(image, for: .normal)
-            
-                    case evoStrings[1]:
-                        self.evo2.setImage(image, for: .normal)
-            
-                    case evoStrings[2]:
-                        self.evo3.setImage(image, for: .normal)
-                    default: break
-                    }
-                    self.updateView()
-                }
-            default:
-                break
-            }
-            
-        }
-    }
-    
-    func apiDidFailWithError(error: NetworkError) {
-        print(error)
-    }
-    func apiResponseFailure(status: NetworkError){
-        print(status)
+        self.setPokeSprite()
     }
 }

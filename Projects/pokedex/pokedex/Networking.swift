@@ -9,25 +9,32 @@
 import Foundation
 import UIKit
 
-enum NetworkError:Error {
-    case ApiFailed(String)
-    case ApiBadResponse(Int)
-}
-
-protocol NetworkingDelegate:class { // functions to return to master
-    func apiDidReturnWithJson(json: [String:Any], callType: ApiPage)
-    func apiDidReturnWithImage(type: PokeImageType, image: UIImage)
-    
-    func apiDidFailWithError(error: NetworkError)
-    func apiResponseFailure(status: NetworkError)
-}
-
 enum ApiPage {
     case PokemonList
     case Pokemon
     case EvolutionChain
     case SpeciesInfo
+    case TypeInfo
+    case AbilityInfo
+    
+    func setPage() -> String {
+        switch self {
+        case .PokemonList:
+            return "pokemon/?offset="
+        case .Pokemon:
+            return "pokemon/"
+        case .EvolutionChain:
+            return "evolution-chain/"
+        case .SpeciesInfo:
+            return "pokemon-species/"
+        case .TypeInfo:
+            return "type/"
+        case .AbilityInfo:
+            return "ability/"
+        }
+    }
 }
+
 
 enum PokeImageType {
     case ShinySprite
@@ -35,169 +42,75 @@ enum PokeImageType {
     case Background1
     case Background2
     case EvoSprite
+    func setImageLocation() -> String {
+        switch self {
+        case .Background1:
+            return "https://raw.githubusercontent.com/capistranc/pokedex/master/pokedex/Assets.xcassets/background1.imageset/background1.jpeg"
+        case .Background2:
+            return "https://raw.githubusercontent.com/capistranc/pokedex/master/pokedex/Assets.xcassets/defaultBackground.imageset/defaultBackground.jpg"
+        case .PokeSprite:
+            return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/"
+        case .EvoSprite:
+            return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/"
+        case .ShinySprite:
+            return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/"
+            
+        }
+    }
 }
 
-func setPage(for callType: ApiPage) -> String {
-    switch callType {
-    case .PokemonList:
-        return "pokemon/?limit=151"
-    case .Pokemon:
-        return "pokemon/"
-    case .EvolutionChain:
-        return "evolution-chain/"
-    case .SpeciesInfo:
-        return "pokemon-species/"
-    }
-}
-func setImageLocation(type:PokeImageType) -> String {
-    switch type {
-    case .Background1:
-        return "https://raw.githubusercontent.com/capistranc/pokedex/master/pokedex/Assets.xcassets/background1.imageset/background1.jpeg"
-    case .Background2:
-        return "https://raw.githubusercontent.com/capistranc/pokedex/master/pokedex/Assets.xcassets/defaultBackground.imageset/defaultBackground.jpg"
-    case .PokeSprite:
-        return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/"
-    case .EvoSprite:
-        return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/"
-    case .ShinySprite:
-        return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/"
-        
-    }
+enum NetworkingError:Error {
+    case BadApi(String)
+    case BadData
+    case BadResponse(Int)
 }
 
 class Networking {
-    static func getPokemonPage(callType:ApiPage, forId id:Int?, completion:@escaping ([String:Any]?, Error?)->()) {
+    static func getPokemonPage(callType:ApiPage, forId id:Int?, completion:@escaping ([String:Any]?, NetworkingError?)->()) {
         let basePage = "https://pokeapi.co/api/v2/"
-        var page = setPage(for: callType)
+        var page = callType.setPage()
         if let idStr = id {page = page + "\(idStr)"}
-        guard let url = URL(string: basePage + page) else {return}
-        
+        guard let url = URL(string: basePage + page) else {return completion(nil, .BadApi("bad url"))}
         
         let session = URLSession.shared
         let task = session.dataTask(with: url) { (data, res, error) in
+            guard error == nil else {return completion(nil, .BadApi(error!.localizedDescription))}
             guard let res = res as? HTTPURLResponse else {return}
-            guard res.statusCode == 200 else {
-                return
-            }
-            guard error == nil else {return}
-            guard let data = data else {return}
+            guard res.statusCode == 200 else {return completion(nil, .BadResponse(res.statusCode))}
+            
+            guard let data = data else {return completion(nil, .BadData)}
             do {
                 let json = try JSONSerialization.jsonObject(with: data)
-                guard let dictionary = json as? [String:Any] else {return}
-                completion(dictionary, error)
+                guard let dictionary = json as? [String:Any] else {return print("bad json")}
+                completion(dictionary, nil)
             } catch {
                 print("something went wrong")
             }
         }
         task.resume()
     }
-    static func getPokemonImage(type:PokeImageType, for id:Int?, () {
-        var urlString = setImageLocation(type: type)
+    
+    static func getPokemonImage(callType:PokeImageType, forId id:Int?, completion:@escaping (UIImage?, NetworkingError?)->()) {
+        var urlString = callType.setImageLocation()
         if let idStr = id {urlString = urlString + "\(idStr).png"}
         
-        guard let url = URL(string: urlString) else {return}
+        guard let url = URL(string: urlString) else {return completion(nil, .BadApi("bad url"))}
         
         let session = URLSession.shared
         let task = session.dataTask(with: url) { (data, response, error) in
-            guard error == nil else {
-                self.delegate?.apiDidFailWithError(error: .ApiFailed(error!.localizedDescription))
-                return
-            }
-            
+            guard error == nil else {return completion(nil, .BadApi(error!.localizedDescription))}
             guard let res = response as? HTTPURLResponse else {return}
-            guard res.statusCode == 200 else {
-                self.delegate?.apiResponseFailure(status: .ApiBadResponse(res.statusCode))
-                return
-            }
+            guard res.statusCode == 200 else {return completion(nil, .BadResponse(res.statusCode))}
+            guard let data = data else {return print("bad data")}
+            guard let image = UIImage(data:data) else {return print("bad image data")}
             
-            guard let data = data else {return}
-            guard let image = UIImage(data:data) else {return}
             if let idNum = id {
                 image.accessibilityIdentifier = "\(idNum)"
             } else {
                 image.accessibilityIdentifier = "background"
             }
-            
-            self.delegate?.apiDidReturnWithImage(type: type, image: image)
+            completion(image, nil)
         }
-        
-        task.resume()
-    }
-
-    
-}
-
-class Networking {
-    weak var delegate:NetworkingDelegate? //This is our master
-    
-    
-    func getPokemonPage(callType:ApiPage,forId id:Int?) {
-        var page = setPage(for: callType)
-        if let idStr = id {page = page + "\(idStr)"}
-        
-        guard let url = URL(string: basePage + page) else {
-            self.delegate?.apiDidFailWithError(error: .ApiFailed("bad api endpoint"))
-            return
-        }
-        
-        let session = URLSession.shared
-        let task = session.dataTask(with: url) { (data, response, error) in
-            guard error == nil else {
-                self.delegate?.apiDidFailWithError(error: .ApiFailed(error!.localizedDescription))
-                return
-            }
-            guard let res = response as? HTTPURLResponse else {return}
-            guard res.statusCode == 200 else {
-                self.delegate?.apiResponseFailure(status: .ApiBadResponse(res.statusCode))
-                return
-            }
-            guard let data = data else {return}
-            do {
-                let jsonObject = try JSONSerialization.jsonObject(with: data)
-                guard let json = jsonObject as? [String:Any] else {return}
-                self.delegate?.apiDidReturnWithJson(json: json, callType: callType)
-            } catch let error {
-                print(error.localizedDescription)
-            }
-        }
-        task.resume()
-    }
-    
-    
-    
-    func getPokemonImage(type:PokeImageType, for id:Int?) {
-        var urlString = setImageLocation(type: type)
-        if let idStr = id {urlString = urlString + "\(idStr).png"}
-        
-        guard let url = URL(string: urlString) else {
-            self.delegate?.apiDidFailWithError(error: .ApiFailed("bad api endpoint"))
-            return
-        }
-        
-        let session = URLSession.shared
-        let task = session.dataTask(with: url) { (data, response, error) in
-            guard error == nil else {
-                self.delegate?.apiDidFailWithError(error: .ApiFailed(error!.localizedDescription))
-                return
-            }
-            
-            guard let res = response as? HTTPURLResponse else {return}
-            guard res.statusCode == 200 else {
-                self.delegate?.apiResponseFailure(status: .ApiBadResponse(res.statusCode))
-                return
-            }
-            
-            guard let data = data else {return}
-            guard let image = UIImage(data:data) else {return}
-            if let idNum = id {
-                image.accessibilityIdentifier = "\(idNum)"
-            } else {
-                image.accessibilityIdentifier = "background"
-            }
-            
-            self.delegate?.apiDidReturnWithImage(type: type, image: image)
-        }
-        
         task.resume()
     }
 }
