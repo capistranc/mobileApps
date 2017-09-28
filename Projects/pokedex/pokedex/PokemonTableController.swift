@@ -100,7 +100,7 @@ class PokemonTableController: UITableViewController {
         let pokeId = indexPath.row+1
         print("pokeid", pokeId)
         
-        nextView.selectedPokemonId = indexPath.row + 1
+        nextView.selectedPokemonId = pokeId
         self.tableView.deselectRow(at: indexPath, animated: true)
     }
 }

@@ -1,0 +1,6 @@
+framework module Pods_SwiftAuthAppTests {
+  umbrella header "Pods-SwiftAuthAppTests-umbrella.h"
+
+  export *
+  module * { export * }
+}

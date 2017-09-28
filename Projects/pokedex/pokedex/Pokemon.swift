@@ -15,16 +15,19 @@ import UIKit
 class Pokemon {
     let id:Int
     var name:String?
-    var types:[String]?
+    var types:[String] = []
+    var abilities:[String] = []
+    
     var height:Int?
     var weight:Int?
     var flavorText:String?
-    var evo:[Int]?
-    var evolutionId:Int?
-    var shinyImage:UIImage?
+    var evos:[Int] = []
     
-    var typeUrlIds:[Int]?
-    var abilityUrlIds:[Int]?
+    var evolutionId:Int?
+    var typeUrlIds:[Int] = []
+    var abilityUrlIds:[Int] = []
+    
+    var shinyImage:UIImage?
     
     init(id:Int) {
         self.id = id
@@ -96,7 +99,7 @@ class Pokemon {
         }
         
         let evoChain = evoIdChain.filter{ $0 <= 151}
-        self.evo = evoChain
+        self.evos = evoChain
     }
     
     func fetchDataForView(callback:@escaping () -> ()) {
@@ -130,7 +133,7 @@ class Pokemon {
     }
     
     func cacheEvoImages() {
-        guard let evos = evo else {return print("failed at caching evos")}
+        if evos.isEmpty {return}
         for evoId in evos{
             if Cache.shared.imageHash[evoId] == nil {
                 Networking.getPokemonImage(callType: .PokeSprite, forId: Int(evoId)){ (image, err) in
