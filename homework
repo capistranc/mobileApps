@@ -1,0 +1,108 @@
+
+Project 1
+//dont store json to coredata
+//Get json containing 12,000 pizzas each with toppings
+//large json -> takes ~5 seconds to load/sort json
+//logos, splash screen, etc.
+//view todisplay top 20 pizzas/toppings
+//view to create your own pizza/add own toppings
+
+// Constraints: cannot have more than 10 toppings per pizza
+// pizza can get double of a topping
+// cannot have tripple -> send an alert/warning
+//		=> Can still add extra bacon of okay with alert.
+//		b: add don't ask again
+// be able to look at a list of orders you've already made
+// No 3rd party libraries
+//tab bar, can add logo to
+// logos, navbar items, etc. can have images stored in assets
+// other images:i.e. pepperonis, mushrooms, pizzas must be called from the web
+//use core data for persistant data.
+//should be able to order a pizza
+//should have last orders, up to 2,000
+//can remove pizza from order list
+// You must be able to order from the top pizzas list and past pizzas order
+
+enumeration topping:String{
+	
+}
+
+class pizza {
+	var toppings:[topping] = []
+
+}
+
+//ios design guidelines
+//interface guidelines
+//app should have icon, all that are required
+//
+
+Project 2
+Can use alamofire
+Weather Application
+Really big scroll view with 3 controllers
+use current location, display a map, if a user is mapping, gps, etc.
+Get a zip code from user location.
+do api call with zipcode and download weather information.
+display weather for current day and the next 5 days.
+Change background depending on the API, img can be in assets folder
+you should be able to change from F and C
++ button to add your own city/different zip code.
+
+
+////Lecture notes on persistent data
+core data
+user default xml file, let it be a singleton. use the function called synchronize to reconcile difference between user file. Do not store passwords in the userDefault file. 
+Biometrics, save it on keychain, for saving password.
+use NSUerDefaults->UserDefaults to store things like the user's email.
+
+coredata is a wrapper that allows you to access a type of SQL database.
+You have entities, properties, and relations
+
+PlayerEntity{
+	teamName:
+	number:
+
+}
+TeamEntity{
+	teamName:
+	Players:
+}
+coredata is essentially a low level SQL database.
+
+Persistance Store Coordinator
+NSManagedObject context
+
+returns an NSManagedObject without context,
+context manages the NSManagedObject, you cannot delete it or modify it directly. you must send requests through the NSManagedObjectContext
+
+When you erase or edit an object in the coredata, you must make a new fectch request to get the updated data.
+Pros:{
+	One NsManagedObjectContext -> use lock to serialize data
+
+}
+How to have two coredata running two commands{
+	create two nsManagedObjectContexts with a parent one, each running on seperate threads.
+}
+Ex. Team{
+	teamName
+	players:[]
+}
+
+player{
+	name:
+	team:
+}
+
+data in CoreData must be transformable(a protocol), convert data to an actual class. 
+
+primatives, array of primatives, dictionarys are all transformable.
+primatives = [strings, ints, etc.]
+
+teams->players is a relationship.
+team -> master, only 1 master, many players
+player -> slave,
+
+Transformable := everything that can be generic.
+
+On a generic, once you assign it cannot change type. 

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="NotificationsAnimationsOther" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="KRa-ui-iUg">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="623"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Cell" rowHeight="85" id="s86-v7-dNW">
+                                        <rect key="frame" x="0.0" y="28" width="375" height="85"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="s86-v7-dNW" id="hxU-Rs-T3c">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="84.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                    </tableViewCell>
+                                </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="BYZ-38-t0r" id="fFh-Kn-jDk"/>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="TXv-57-djU"/>
+                                </connections>
+                            </tableView>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oen-4q-Amr">
+                                <rect key="frame" x="0.0" y="623" width="375" height="44"/>
+                                <items>
+                                    <barButtonItem style="plain" id="Q5A-io-VMQ">
+                                        <textField key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" id="biV-5c-Jlx">
+                                            <rect key="frame" x="16" y="7" width="25" height="30"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <nil key="textColor"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                            <textInputTraits key="textInputTraits"/>
+                                        </textField>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="8Iw-Rr-Oa9"/>
+                                    <barButtonItem title="Item" id="LVl-83-2zL"/>
+                                </items>
+                            </toolbar>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <gestureRecognizers/>
+                        <constraints>
+                            <constraint firstItem="oen-4q-Amr" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="8XN-66-N2D"/>
+                            <constraint firstItem="oen-4q-Amr" firstAttribute="top" secondItem="KRa-ui-iUg" secondAttribute="bottom" id="HCz-CS-xbv"/>
+                            <constraint firstItem="oen-4q-Amr" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="Imy-63-4cN"/>
+                            <constraint firstItem="KRa-ui-iUg" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="J3d-nE-jlu"/>
+                            <constraint firstItem="oen-4q-Amr" firstAttribute="top" secondItem="KRa-ui-iUg" secondAttribute="bottom" id="Rye-0A-Swr"/>
+                            <constraint firstItem="KRa-ui-iUg" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="cvo-Wj-Rsd"/>
+                            <constraint firstItem="KRa-ui-iUg" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="dTm-6K-h0q"/>
+                            <constraint firstItem="oen-4q-Amr" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="maR-k3-5Rd"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                    </view>
+                    <connections>
+                        <outlet property="sendButton" destination="LVl-83-2zL" id="2pa-GW-FsO"/>
+                        <outlet property="tableView" destination="KRa-ui-iUg" id="pQI-SY-PIN"/>
+                        <outlet property="textField" destination="biV-5c-Jlx" id="ixY-04-cPQ"/>
+                        <outlet property="toolbarBottomConstraint" destination="maR-k3-5Rd" id="IJJ-00-hUL"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="117.59999999999999" y="117.39130434782609"/>
+        </scene>
+    </scenes>
+</document>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="NotificationsAnimationsOther" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oen-4q-Amr">
+                                <rect key="frame" x="0.0" y="623" width="375" height="44"/>
+                                <items>
+                                    <barButtonItem style="plain" id="Q5A-io-VMQ">
+                                        <textField key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" id="biV-5c-Jlx">
+                                            <rect key="frame" x="16" y="7" width="284" height="30"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <nil key="textColor"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                            <textInputTraits key="textInputTraits"/>
+                                        </textField>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="8Iw-Rr-Oa9"/>
+                                    <barButtonItem title="Send" id="LVl-83-2zL"/>
+                                </items>
+                            </toolbar>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="thk-JL-Jv2">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="623"/>
+                            </scrollView>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <gestureRecognizers/>
+                        <constraints>
+                            <constraint firstItem="thk-JL-Jv2" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="6rT-99-0TR"/>
+                            <constraint firstItem="oen-4q-Amr" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="8XN-66-N2D"/>
+                            <constraint firstItem="oen-4q-Amr" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="Imy-63-4cN"/>
+                            <constraint firstItem="thk-JL-Jv2" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="KmU-ik-OzE"/>
+                            <constraint firstItem="thk-JL-Jv2" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="RHR-IF-eDt"/>
+                            <constraint firstItem="oen-4q-Amr" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="maR-k3-5Rd"/>
+                            <constraint firstItem="oen-4q-Amr" firstAttribute="top" secondItem="thk-JL-Jv2" secondAttribute="bottom" id="sIm-oW-5YD"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                    </view>
+                    <connections>
+                        <outlet property="scrollView" destination="thk-JL-Jv2" id="43f-dx-7ZN"/>
+                        <outlet property="sendButton" destination="LVl-83-2zL" id="2pa-GW-FsO"/>
+                        <outlet property="textField" destination="biV-5c-Jlx" id="ixY-04-cPQ"/>
+                        <outlet property="toolbarBottomConstraint" destination="maR-k3-5Rd" id="IJJ-00-hUL"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="117.59999999999999" y="117.39130434782609"/>
+        </scene>
+    </scenes>
+</document>

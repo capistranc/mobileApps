@@ -11,8 +11,8 @@ import SwiftKeychainWrapper
 import LocalAuthentication
 import Firebase
 import FirebaseAuth
+
 class ViewController: UIViewController {
-    
     
     @IBOutlet weak var usernameField: UITextField!
     @IBOutlet weak var passwordField: UITextField!
